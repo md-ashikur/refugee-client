@@ -1,0 +1,16 @@
+.input{
+    border: 1px solid rgb(221, 221, 221);
+    margin: 3px 0;
+
+  
+}
+.input:focus{
+    border:1px solid #37cdbe;
+    outline: none;
+
+}
+.btn:focus{
+   
+    outline: none;
+
+}

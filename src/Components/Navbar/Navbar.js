@@ -8,14 +8,14 @@ const Navbar = () => {
     <div>
       <div className="navbar lg:px-10 px-5  bg-primary py-5">
         <div className="flex-1">
-          <Link to="/" className=" text-white lg:text-xl">
-            Rafugee Accomodation
+          <Link to="/" className=" text-white font-bold lg:text-xl">
+            Refugee Accomodation
           </Link>
         </div>
 
         <div className="flex gap-4">
           {/* ===================== Add Accomodation ================ */}
-          <Link to="" className="flex flex-col items-center text-white">
+          <Link to="addAccom" className="flex flex-col items-center text-white">
             <IoAddCircleOutline className="text-3xl " />
             <p className="hidden lg:block text-xs pt-1">Add Accomodation</p>
           </Link>
