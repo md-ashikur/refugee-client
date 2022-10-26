@@ -10,6 +10,8 @@ const Accomodation = () => {
   } = useForm();
   const onSubmit = (data) => console.log(data);
 
+ 
+
   return (
     <div className="flex justify-center">
       <div className="lg:p-8 p-5 rounded-lg my-10 mx-5 h-auto lg:w-3/4 shadow-lg ">
@@ -18,18 +20,19 @@ const Accomodation = () => {
           <div className="grid lg:grid-cols-2 gap-3">
             <div>
                {/* ------------picture input----------- */}
+
                <div className="flex-col">
                   <input
-                    className="input w-full h-36 py-auto"
+                    className="input w-full h-36 pt-16 lg:pl-28 pl-12"
                     type="file"
                     accept="image/*"
                     {...register("picture", { required: true })}
                     aria-invalid={errors.picture ? "true" : "false"}
-                    placeholder="Number of People" alt="/"
+                    
                   />
                   {errors.picture?.type === "required" && (
                     <p role="alert" className="text-xs text-red-500">
-                      Number of People is required
+                      Image is required
                     </p>
                   )}
                 </div>
