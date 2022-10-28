@@ -18,7 +18,7 @@ const Navbar = () => {
       <div className="navbar lg:px-10 px-5  bg-primary py-5">
         <div className="flex-1">
           <Link to="/" className=" text-white font-bold lg:text-xl">
-            Refugee Accomodation
+            Refugee Accomodation 
           </Link>
         </div>
 
@@ -46,6 +46,9 @@ const Navbar = () => {
             >
               <li>
                 <Link>English</Link>
+              </li>
+              <li>
+                <Link>Deutsch</Link>
               </li>
               <li>
                 <Link>Deutsch</Link>
