@@ -1,5 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 import "./Accomodation.css";
 
 const Accomodation = () => {
@@ -10,35 +11,29 @@ const Accomodation = () => {
   } = useForm();
   const onSubmit = (data) => console.log(data);
 
- 
-
   return (
     <div className="flex justify-center">
       <div className="lg:p-8 p-5 rounded-lg my-10 mx-5 h-auto lg:w-3/4 shadow-lg ">
-
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid lg:grid-cols-2 gap-3">
             <div>
-               {/* ------------picture input----------- */}
+              {/* ------------picture input----------- */}
 
-               <div className="flex-col">
-                  <input
-                    className="input w-full h-36 pt-16 lg:pl-28 pl-12"
-                    type="file"
-                    accept="image/*"
-                    {...register("picture", { required: true })}
-                    aria-invalid={errors.picture ? "true" : "false"}
-                    
-                  />
-                  {errors.picture?.type === "required" && (
-                    <p role="alert" className="text-xs text-red-500">
-                      Image is required
-                    </p>
-                  )}
-                </div>
+              <div className="flex-col">
+                <input
+                  className="input w-full h-36 pt-16 lg:pl-32 pl-12"
+                  type="file"
+                  accept="image/*"
+                  {...register("picture", { required: true })}
+                  aria-invalid={errors.picture ? "true" : "false"}
+                />
+                {errors.picture?.type === "required" && (
+                  <p role="alert" className="text-xs text-red-500">
+                    Image is required
+                  </p>
+                )}
+              </div>
               <div className="grid lg:grid-cols-2 gap-3 ">
-               
-
                 {/* ------------Number of People----------- */}
                 <div className="flex-col">
                   <input
@@ -76,7 +71,6 @@ const Accomodation = () => {
               <div className="flex-col">
                 <input
                   className="input w-full"
-
                   {...register("city", { required: true })}
                   aria-invalid={errors.city ? "true" : "false"}
                   placeholder="City"
@@ -97,7 +91,6 @@ const Accomodation = () => {
                     type="date"
                     {...register("from", { required: true })}
                     aria-invalid={errors.from ? "true" : "false"}
-
                   />
                   {errors.from?.type === "required" && (
                     <p role="alert" className="text-xs text-red-500">
@@ -124,7 +117,6 @@ const Accomodation = () => {
               </div>
             </div>
 
-
             {/* =================================== */}
 
             <div>
@@ -132,7 +124,6 @@ const Accomodation = () => {
               <div className="flex-col">
                 <input
                   className="input w-full"
-
                   {...register("title", { required: true })}
                   aria-invalid={errors.title ? "true" : "false"}
                   placeholder="Title"
@@ -148,7 +139,6 @@ const Accomodation = () => {
               <div className="flex-col">
                 <textarea
                   className="input py-2 w-full h-52"
-
                   {...register("description", { required: true })}
                   aria-invalid={errors.description ? "true" : "false"}
                   placeholder="Property Description..."
@@ -162,16 +152,18 @@ const Accomodation = () => {
 
               {/* ----------cancle & Add button---------------- */}
               <div className="grid grid-cols-2 gap-3 my-3">
-                <input type="submit" value="Cancle" className="btn text-white" />
-                <input type="submit" value="Add" className="btn bg-primary border-0 text-white" />
-
+                <Link to="/home">
+                  <input value="Cancle" className="btn text-white" />
+                </Link>
+                <input
+                  type="submit"
+                  value="Add"
+                  className="btn bg-primary border-0 text-white"
+                />
               </div>
             </div>
           </div>
         </form>
-
-
-
       </div>
     </div>
   );

@@ -40,7 +40,7 @@ const Register = () => {
   }
   return (
     <div className=" flex justify-center items-center">
-      <div className="lg:w-1/2  rounded-lg my-10">
+      <div className="lg:w-1/2  rounded-lg my-10 mx-5">
 
 
         <div className="min-h-fit lg:px-16 rounded-lg shadow-2xl">
