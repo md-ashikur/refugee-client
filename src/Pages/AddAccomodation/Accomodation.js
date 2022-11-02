@@ -115,6 +115,31 @@ const Accomodation = () => {
                   )}
                 </div>
               </div>
+
+              <div className="grid lg:grid-cols-2 gap-3 ">
+                {/* ------------Email----------- */}
+                <div className="flex-col">
+                  <input
+                    className="input w-full"
+                    type="email"
+                    {...register("Email")}
+                    placeholder="Email"
+                  />
+                  
+                </div>
+
+                {/* ------------Phone Number---------- */}
+                <div className="flex-col">
+                  <input
+                    className="input w-full"
+                    type="number"
+                    {...register("phone")}
+                   
+                    placeholder="Phone Number"
+                  />
+                  
+                </div>
+              </div>
             </div>
 
             {/* =================================== */}
@@ -138,7 +163,7 @@ const Accomodation = () => {
               {/* -------------------- description ----------------------- */}
               <div className="flex-col">
                 <textarea
-                  className="input py-2 w-full h-52"
+                  className="input py-2 w-full h-64"
                   {...register("description", { required: true })}
                   aria-invalid={errors.description ? "true" : "false"}
                   placeholder="Property Description..."
@@ -151,9 +176,9 @@ const Accomodation = () => {
               </div>
 
               {/* ----------cancle & Add button---------------- */}
-              <div className="grid grid-cols-2 gap-3 my-3">
+              <div className="grid lg:grid-cols-2 gap-3 my-3">
                 <Link to="/home">
-                  <input value="Cancle" className="btn text-white" />
+                  <input value="Cancle" className="btn text-white w-full" />
                 </Link>
                 <input
                   type="submit"

@@ -4,7 +4,11 @@ import Navbar from './Components/Navbar/Navbar';
 import Accomodation from './Pages/AddAccomodation/Accomodation';
 import Login from './Pages/Login/Login';
 import Register from './Pages/SignUp/Register';
+
+
 function App() {
+ 
+
   return (
     <div className="">
       <Navbar/>

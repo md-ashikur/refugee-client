@@ -34,9 +34,15 @@ const Home = () => {
 
               <p><b>To :</b> 15.11.2022</p>
             </div>
-            <p className="my-3">
-              <b>Contact : </b> abcd@gmail.com
-            </p>
+
+            <div className="grid lg:grid-cols-2 gap-3 my-3">
+              {/* ------------Email----------- */}
+              <p><b> Email :</b> abc@example.com</p>
+
+              {/* ------------Phone number---------- */}
+
+              <p> <b>Phone :</b> +1234567890</p>
+            </div>
           </div>
 
           {/* =================================== */}

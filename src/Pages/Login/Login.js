@@ -52,11 +52,11 @@ const Login = () => {
                             <input
                                 type="email"
                                 className="border-b-2 slate-700 outline-0 py-2"
-                                placeholder="Email Address*"
-                                {...register("email", {
+                                placeholder="Username*"
+                                {...register("username", {
                                     required: {
                                         value: true,
-                                        message: "Email Address is required",
+                                        message: "Username is required",
                                     },
                                     pattern: {
                                         value: /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/,
@@ -64,7 +64,7 @@ const Login = () => {
                                     },
                                 })}
                             />
-                            <p className="text-red-500 text-xs">{errors.email?.message}</p>
+                            <p className="text-red-500 text-xs">{errors.username?.message}</p>
 
 
                             <div className=" relative" >
