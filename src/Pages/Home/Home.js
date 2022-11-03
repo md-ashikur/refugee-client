@@ -12,7 +12,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="flex justify-center flex-col items-center">
+    <div className="flex justify-center flex-col items-center pt-20">
       {
         accomodations.map( accomodation => <Accomodation
         key={accomodation._id}

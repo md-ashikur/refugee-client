@@ -1,49 +1,81 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import "./Accomodation.css";
 
-
-
 const AddAccomodation = () => {
+  const { register, formState: { errors }, handleSubmit, reset } = useForm();
+  const handleClick = () => reset();
 
-  const [accomodation, setAccomodation] = useState([]);
 
-  useEffect(() => {
-    fetch(`http://localhost:5000/home`)
-    .then(res => res.json())
-    .then(data => setAccomodation(data));
-  }, []);
+const imgStrogeKey = 'baaf690471e7b0f1c00bcea99f84d257';
 
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-  } = useForm();
-  const onSubmit = (data) => { 
-    
+  const onSubmit = async data => {
     console.log(data);
-  }
 
-  // post data to server---------------
-  // fetch('http://localhost:3000/home', {
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //   },
-  //   body: JSON.stringify(accomodation),
-  // })
-  // .then(res => res.json())
-  //  .then(data => {
-  //   console.log(data)
-  //  });
+      const image = data.image[0];
+      const formData = new FormData();
+      formData.append("image", image);
+      const url = `https://api.imgbb.com/1/upload?expiration=600&key=${imgStrogeKey}`;
+      fetch(url, {
+        method: 'POST',
+        body: formData  
+      })
+      .then(res => res.json())
+      .then(result => {
+        if(result.success) {
+          const img = result.data.url;
+          const accomodation ={
+            image: img,
+            people: data.people,
+            rooms: data.rooms,
+            city: data.city,
+            from: data.from,
+            to: data.to,
+            email: data.email,
+            phone: data.phone,
+            title: data.title,
+            description: data.description,
+            
+          }
+          // send to database
+          fetch(`http://localhost:5000/accomodations`, {
+                method: "POST",
+                headers: {
+                  'content-type': 'application/json'
+                },
+                body: JSON.stringify(accomodation)
+              })
+               .then(res => res.json())
+               .then(inserted => {
+                if(inserted.insertedId){
+                  toast.success('🦄 Wow so easy!', {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                    });
+                  reset();
+                }
+                else{
+                  toast.error('Error adding accomodation');
+                }
 
-  
- 
-  
-  return (
-    <div className="flex justify-center">
+               })
+        }
+        console.log(result);
+      }
     
+    
+    )}
+
+  return (
+    <div className="flex justify-center py-20">
       <div className="lg:p-8 p-5 rounded-lg my-10 mx-5 h-auto lg:w-3/4 shadow-lg ">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid lg:grid-cols-2 gap-3">
@@ -55,8 +87,7 @@ const AddAccomodation = () => {
                   className="input w-full h-36 pt-16 lg:pl-32 pl-12"
                   type="file"
                   accept="image/*"
-                  
-                  {...register("image", { required: true })}
+                  {...register("image", { required: true})}
                   aria-invalid={errors.image ? "true" : "false"}
                 />
                 {errors.image?.type === "required" && (
@@ -71,7 +102,6 @@ const AddAccomodation = () => {
                   <input
                     className="input w-full"
                     type="number"
-                   
                     {...register("people", { required: true })}
                     aria-invalid={errors.people ? "true" : "false"}
                     placeholder="Number of People"
@@ -88,7 +118,6 @@ const AddAccomodation = () => {
                   <input
                     className="input w-full"
                     type="number"
-                   
                     {...register("rooms", { required: true })}
                     aria-invalid={errors.rooms ? "true" : "false"}
                     placeholder="Available Rooms"
@@ -105,7 +134,6 @@ const AddAccomodation = () => {
               <div className="flex-col">
                 <input
                   className="input w-full"
-           
                   {...register("city", { required: true })}
                   aria-invalid={errors.city ? "true" : "false"}
                   placeholder="City"
@@ -124,7 +152,6 @@ const AddAccomodation = () => {
                   <input
                     className="input w-full"
                     type="date"
-                  
                     {...register("from", { required: true })}
                     aria-invalid={errors.from ? "true" : "false"}
                   />
@@ -140,7 +167,6 @@ const AddAccomodation = () => {
                   <input
                     className="input w-full"
                     type="date"
-               
                     {...register("to", { required: true })}
                     aria-invalid={errors.to ? "true" : "false"}
                   />
@@ -159,11 +185,14 @@ const AddAccomodation = () => {
                   <input
                     className="input w-full"
                     type="email"
-                 
-                    {...register("Email")}
+                    {...register("email", { required: true })}
                     placeholder="Email"
                   />
-                  
+                   {errors.email?.type === "required" && (
+                    <p role="alert" className="text-xs text-red-500">
+                      Email is required
+                    </p>
+                  )}
                 </div>
 
                 {/* ------------Phone Number---------- */}
@@ -171,12 +200,9 @@ const AddAccomodation = () => {
                   <input
                     className="input w-full"
                     type="number"
-              
                     {...register("phone")}
-                   
                     placeholder="Phone Number"
                   />
-                  
                 </div>
               </div>
             </div>
@@ -188,7 +214,6 @@ const AddAccomodation = () => {
               <div className="flex-col">
                 <input
                   className="input w-full"
-                
                   {...register("title", { required: true })}
                   aria-invalid={errors.title ? "true" : "false"}
                   placeholder="Title"
@@ -204,7 +229,6 @@ const AddAccomodation = () => {
               <div className="flex-col">
                 <textarea
                   className="input py-2 w-full h-64"
-                  
                   {...register("description", { required: true })}
                   aria-invalid={errors.description ? "true" : "false"}
                   placeholder="Property Description..."
@@ -218,13 +242,12 @@ const AddAccomodation = () => {
 
               {/* ----------cancle & Add button---------------- */}
               <div className="grid lg:grid-cols-2 gap-3 my-3">
-                <Link to="/home">
-                  <input value="Cancle" className="btn text-white w-full" />
+                <Link to="">
+                  <input onClick={handleClick} value="Cancle" className="btn text-white w-full" />
                 </Link>
                 <input
                   type="submit"
                   value="Add"
-               
                   className="btn bg-primary border-0 text-white"
                 />
               </div>
