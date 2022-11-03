@@ -72,30 +72,32 @@ const Navbar = () => {
           </div>
           {/* =================Profile ========= */}
           {user ? (
-            <div className="dropdown dropdown-end">
-              <label tabIndex={0} className="text-white">
-                <CgProfile className="text-3xl " />
-                <p className="pt-1 text-xs  hidden lg:block">Profile</p>
-              </label>
-              <ul
-                tabIndex={0}
-                className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
-              >
-                <li>
-                  <Link>Edit Listings</Link>
-                </li>
-                <li>
-                  <Link to="register" onClick={handleSignOut}>
-                    Logout
-                  </Link>
-                </li>
-              </ul>
-            </div>
+           
+
+<Link to="login" className="flex flex-col items-center text-white">
+<IoMdLogIn className="text-3xl" />
+<p className="pt-1 text-xs  hidden lg:block">Login</p>
+</Link>
           ) : (
-            <Link to="login" className="flex flex-col items-center text-white">
-              <IoMdLogIn className="text-3xl" />
-              <p className="pt-1 text-xs  hidden lg:block">Login</p>
-            </Link>
+            <div className="dropdown dropdown-end">
+            <label tabIndex={0} className="text-white">
+              <CgProfile className="text-3xl " />
+              <p className="pt-1 text-xs  hidden lg:block">Profile</p>
+            </label>
+            <ul
+              tabIndex={0}
+              className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
+            >
+              <li>
+                <Link to="edit">Edit Listings</Link>
+              </li>
+              <li>
+                <Link to="register" onClick={handleSignOut}>
+                  Logout
+                </Link>
+              </li>
+            </ul>
+          </div>
           )}
         </div>
       </div>
