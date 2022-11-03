@@ -1,18 +1,49 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import "./Accomodation.css";
 
-const Accomodation = () => {
+
+
+const AddAccomodation = () => {
+
+  const [accomodation, setAccomodation] = useState([]);
+
+  useEffect(() => {
+    fetch(`http://localhost:5000/home`)
+    .then(res => res.json())
+    .then(data => setAccomodation(data));
+  }, []);
+
   const {
     register,
     formState: { errors },
     handleSubmit,
   } = useForm();
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = (data) => { 
+    
+    console.log(data);
+  }
 
+  // post data to server---------------
+  // fetch('http://localhost:3000/home', {
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //   },
+  //   body: JSON.stringify(accomodation),
+  // })
+  // .then(res => res.json())
+  //  .then(data => {
+  //   console.log(data)
+  //  });
+
+  
+ 
+  
   return (
     <div className="flex justify-center">
+    
       <div className="lg:p-8 p-5 rounded-lg my-10 mx-5 h-auto lg:w-3/4 shadow-lg ">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid lg:grid-cols-2 gap-3">
@@ -24,10 +55,11 @@ const Accomodation = () => {
                   className="input w-full h-36 pt-16 lg:pl-32 pl-12"
                   type="file"
                   accept="image/*"
-                  {...register("picture", { required: true })}
-                  aria-invalid={errors.picture ? "true" : "false"}
+                  
+                  {...register("image", { required: true })}
+                  aria-invalid={errors.image ? "true" : "false"}
                 />
-                {errors.picture?.type === "required" && (
+                {errors.image?.type === "required" && (
                   <p role="alert" className="text-xs text-red-500">
                     Image is required
                   </p>
@@ -39,6 +71,7 @@ const Accomodation = () => {
                   <input
                     className="input w-full"
                     type="number"
+                   
                     {...register("people", { required: true })}
                     aria-invalid={errors.people ? "true" : "false"}
                     placeholder="Number of People"
@@ -55,6 +88,7 @@ const Accomodation = () => {
                   <input
                     className="input w-full"
                     type="number"
+                   
                     {...register("rooms", { required: true })}
                     aria-invalid={errors.rooms ? "true" : "false"}
                     placeholder="Available Rooms"
@@ -71,6 +105,7 @@ const Accomodation = () => {
               <div className="flex-col">
                 <input
                   className="input w-full"
+           
                   {...register("city", { required: true })}
                   aria-invalid={errors.city ? "true" : "false"}
                   placeholder="City"
@@ -89,6 +124,7 @@ const Accomodation = () => {
                   <input
                     className="input w-full"
                     type="date"
+                  
                     {...register("from", { required: true })}
                     aria-invalid={errors.from ? "true" : "false"}
                   />
@@ -104,6 +140,7 @@ const Accomodation = () => {
                   <input
                     className="input w-full"
                     type="date"
+               
                     {...register("to", { required: true })}
                     aria-invalid={errors.to ? "true" : "false"}
                   />
@@ -122,6 +159,7 @@ const Accomodation = () => {
                   <input
                     className="input w-full"
                     type="email"
+                 
                     {...register("Email")}
                     placeholder="Email"
                   />
@@ -133,6 +171,7 @@ const Accomodation = () => {
                   <input
                     className="input w-full"
                     type="number"
+              
                     {...register("phone")}
                    
                     placeholder="Phone Number"
@@ -149,6 +188,7 @@ const Accomodation = () => {
               <div className="flex-col">
                 <input
                   className="input w-full"
+                
                   {...register("title", { required: true })}
                   aria-invalid={errors.title ? "true" : "false"}
                   placeholder="Title"
@@ -164,6 +204,7 @@ const Accomodation = () => {
               <div className="flex-col">
                 <textarea
                   className="input py-2 w-full h-64"
+                  
                   {...register("description", { required: true })}
                   aria-invalid={errors.description ? "true" : "false"}
                   placeholder="Property Description..."
@@ -183,6 +224,7 @@ const Accomodation = () => {
                 <input
                   type="submit"
                   value="Add"
+               
                   className="btn bg-primary border-0 text-white"
                 />
               </div>
@@ -194,4 +236,4 @@ const Accomodation = () => {
   );
 };
 
-export default Accomodation;
+export default AddAccomodation;
