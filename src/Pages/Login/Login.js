@@ -37,7 +37,7 @@ const Login = () => {
     }
 
     return (
-        <div className=" flex justify-center items-center">
+        <div className=" flex justify-center items-center py-28">
             <div className="lg:w-5/4 my-10">
 
 

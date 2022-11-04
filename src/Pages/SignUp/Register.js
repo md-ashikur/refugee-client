@@ -39,7 +39,7 @@ const Register = () => {
 
   }
   return (
-    <div className=" flex justify-center items-center">
+    <div className=" flex justify-center items-center py-28">
       <div className="lg:w-1/2  rounded-lg my-10 mx-5">
 
 

@@ -199,7 +199,7 @@ const imgStrogeKey = 'baaf690471e7b0f1c00bcea99f84d257';
                 <div className="flex-col">
                   <input
                     className="input w-full"
-                    type="number"
+                    type="tel"
                     {...register("phone")}
                     placeholder="Phone Number"
                   />
@@ -242,14 +242,15 @@ const imgStrogeKey = 'baaf690471e7b0f1c00bcea99f84d257';
 
               {/* ----------cancle & Add button---------------- */}
               <div className="grid lg:grid-cols-2 gap-3 my-3">
-                <Link to="">
-                  <input onClick={handleClick} value="Cancle" className="btn text-white w-full" />
-                </Link>
+                
                 <input
                   type="submit"
                   value="Add"
                   className="btn bg-primary border-0 text-white"
                 />
+                <Link to="" className="lg:order-first">
+                  <input onClick={handleClick} value="Cancle" className="btn text-white w-full" />
+                </Link>
               </div>
             </div>
           </div>
