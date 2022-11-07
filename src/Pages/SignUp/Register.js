@@ -1,31 +1,35 @@
-import React, {  useState } from "react";
-import { useForm} from "react-hook-form";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
 import { AiFillEye } from "react-icons/ai";
-import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import {
+  useCreateUserWithEmailAndPassword,
+  useUpdateProfile,
+} from "react-firebase-hooks/auth";
 import auth from "../../firebase.init";
-
+import Loading from "../../Components/Loading/Loading";
 
 const Register = () => {
-  const [userName, setUserName] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const [
-    createUserWithEmailAndPassword,
-    user,
-  ] = useCreateUserWithEmailAndPassword(auth);
-
-
+  const [createUserWithEmailAndPassword, user, loading, error] =
+    useCreateUserWithEmailAndPassword(auth);
+  const [updateProfile, updating, updateError] = useUpdateProfile(auth);
   const {
     register,
     formState: { errors },
     handleSubmit,
   } = useForm();
-  const onSubmit = (data) => console.log(data);
 
+
+  // Navigate=====================
+  const nevigate = useNavigate();
+
+  const onSubmit = async (data) => {
+    console.log(data);
+    await createUserWithEmailAndPassword(data.email, data.password, data.firstName, data.lastName);
+    await updateProfile({ displayName:data.username });
+    nevigate('/login');
+    
+  };
 
   const [passwordShown, setPasswordShown] = useState(false);
   // Password toggle handler
@@ -33,16 +37,22 @@ const Register = () => {
     setPasswordShown(!passwordShown);
   };
 
-  if (user) {
-
-    console.log(user)
-
+  let signInError;
+  if (error || updateError) {
+    return (signInError = (
+      <p className="text-red-500 text-xs">{error?.message}</p>
+    ));
   }
+  if ( loading || updating) {
+    return <Loading></Loading>
+  }
+  if (user) {
+    console.log(user);
+  }
+
   return (
     <div className=" flex justify-center items-center py-28">
       <div className="lg:w-1/2  rounded-lg my-10 mx-5">
-
-
         <div className="min-h-fit lg:px-16 rounded-lg shadow-2xl">
           <div className="card-body">
             <h2 className="text-2xl font-bold py-3">Create Account</h2>
@@ -52,7 +62,6 @@ const Register = () => {
             >
               {/* ============UserName input============ */}
               <input
-                onChange={(e) => setUserName(e.target.value)}
                 placeholder="Username*"
                 className="border-b-2 slate-700 outline-0 py-2"
                 {...register("username", {
@@ -63,53 +72,47 @@ const Register = () => {
                   },
                 })}
               />
-              <p className="text-red-500 text-xs">
-                {errors.username?.message}
-              </p>
-             <div className="grid grid-cols-2 gap-5">
-               {/* ==========first Name input=========== */}
-              <div className="flex-col">
-              <input
-                onChange={(e) => setFirstName(e.target.value)}
-                placeholder="First Name*"
-                className="border-b-2 slate-700 w-full outline-0 py-2"
-                {...register("firstName", {
-                  maxLength: 20,
-                  required: {
-                    value: true,
-                    message: "First Name is required",
-                  },
-                })}
-              />
-              <p className="text-red-500 text-xs">
-                {errors.firstName?.message}
-              </p>
+              <p className="text-red-500 text-xs">{errors.username?.message}</p>
+              <div className="grid grid-cols-2 gap-5">
+                {/* ==========first Name input=========== */}
+                <div className="flex-col">
+                  <input
+                    placeholder="First Name*"
+                    className="border-b-2 slate-700 w-full outline-0 py-2"
+                    {...register("firstName", {
+                      maxLength: 20,
+                      required: {
+                        value: true,
+                        message: "First Name is required",
+                      },
+                    })}
+                  />
+                  <p className="text-red-500 text-xs">
+                    {errors.firstName?.message}
+                  </p>
+                </div>
+                {/* ==========Last Name input=========== */}
+                <div className="flex-col ">
+                  <input
+                    placeholder="Last Name*"
+                    className="border-b-2 slate-700 w-full outline-0 py-2"
+                    {...register("lastName", {
+                      maxLength: 20,
+                      required: {
+                        value: true,
+                        message: "Last Name is required",
+                      },
+                    })}
+                  />
+                  <p className="text-red-500 text-xs">
+                    {errors.lastName?.message}
+                  </p>
+                </div>
               </div>
-              {/* ==========Last Name input=========== */}
-              <div className="flex-col ">
-              <input
-                onChange={(e) => setLastName(e.target.value)}
-                placeholder="Last Name*"
-                className="border-b-2 slate-700 w-full outline-0 py-2"
-                {...register("lastName", {
-                  maxLength: 20,
-                  required: {
-                    value: true,
-                    message: "Last Name is required",
-                  },
-                })}
-              />
-              <p className="text-red-500 text-xs">
-                {errors.lastName?.message}
-              </p>
-              </div>
-             </div>
-
 
               {/* ================email input==== */}
               <input
                 type="email"
-                onChange={(e) => setEmail(e.target.value)}
                 className="border-b-2 slate-700 outline-0 py-2"
                 placeholder="Email Address*"
                 {...register("email", {
@@ -125,12 +128,10 @@ const Register = () => {
               />
               <p className="text-red-500 text-xs">{errors.email?.message}</p>
 
-
               {/* ================password input=========== */}
               <div className=" relative">
                 <input
                   name="password"
-                  onChange={(e) => setPassword(e.target.value)}
                   type={passwordShown ? "text" : "password"}
                   className="border-b-2 w-full slate-700 outline-0 py-2"
                   placeholder="Password*"
@@ -156,16 +157,11 @@ const Register = () => {
                   className="absolute right-3 top-4 text-xl hover:text-primary"
                 />
               </div>
-              <p className="text-red-500 text-xs">
-                {errors.password?.message}
-              </p>
+              <p className="text-red-500 text-xs">{errors.password?.message}</p>
 
-
-
-
-
+              {signInError}
               <input
-                onClick={() => createUserWithEmailAndPassword(userName, firstName, lastName, email, password)}
+             
                 type="submit"
                 value="Create Account"
                 className="bg-primary transition duration-150 ease-in-out hover:scale-[0.97] text-white py-3 rounded"
@@ -180,7 +176,6 @@ const Register = () => {
             </p>
           </div>
         </div>
-
       </div>
     </div>
   );

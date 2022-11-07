@@ -5,14 +5,14 @@ import { toast } from "react-toastify";
 import "./Accomodation.css";
 
 const AddAccomodation = () => {
-  const { register, formState: { errors }, handleSubmit, reset } = useForm();
+  const { register,  formState: { errors }, handleSubmit, reset } = useForm();
+
   const handleClick = () => reset();
 
 
 const imgStrogeKey = 'baaf690471e7b0f1c00bcea99f84d257';
 
   const onSubmit = async data => {
-    console.log(data);
 
       const image = data.image[0];
       const formData = new FormData();
@@ -50,16 +50,7 @@ const imgStrogeKey = 'baaf690471e7b0f1c00bcea99f84d257';
                .then(res => res.json())
                .then(inserted => {
                 if(inserted.insertedId){
-                  toast.success('🦄 Wow so easy!', {
-                    position: "bottom-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                    });
+                 alert('Accomodation added successfully');
                   reset();
                 }
                 else{
@@ -244,6 +235,7 @@ const imgStrogeKey = 'baaf690471e7b0f1c00bcea99f84d257';
               <div className="grid lg:grid-cols-2 gap-3 my-3">
                 
                 <input
+              
                   type="submit"
                   value="Add"
                   className="btn bg-primary border-0 text-white"

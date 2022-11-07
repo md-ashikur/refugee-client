@@ -21,6 +21,7 @@ const Edit = ({ accomodation }) => {
     formState: { errors },
     handleSubmit,
   } = useForm();
+
   const [accomodations, setAccomodations] = useState([]);
 
   useEffect(() => {
@@ -42,7 +43,9 @@ const Edit = ({ accomodation }) => {
           if (data.deleteCount > 0) {
             console.log(data);
             alert("Successfully deleted");
-            const remaining = accomodations.filter((accomodation) => accomodation._id !== id);
+            const remaining = accomodations.filter(
+              (accomodation) => accomodation._id !== id
+            );
             setAccomodations(remaining);
           }
         });
