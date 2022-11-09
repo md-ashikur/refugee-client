@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AiFillEye } from "react-icons/ai";
 import auth from "../../firebase.init";
 import Loading from "../../Components/Loading/Loading";
@@ -17,12 +17,7 @@ const nevigate = useNavigate();
     handleSubmit,
   } = useForm();
 
-  const onSubmit = async(data) => {
-    console.log(data);
-    await signInWithEmailAndPassword(data.email, data.password);
-    nevigate('/');
-  };
-
+  
 
   //passwordShown==========================
   const [passwordShown, setPasswordShown] = useState(false);
@@ -33,6 +28,9 @@ const nevigate = useNavigate();
   };
 
   let signInError;
+  const location = useLocation();
+  let from = location.state?.from?.pathname || "/";
+
 
   if (error) {
     return (signInError = (
@@ -45,6 +43,12 @@ const nevigate = useNavigate();
   if (user) {
     console.log(user);
   }
+  const onSubmit = async(data) => {
+    console.log(data);
+    await signInWithEmailAndPassword(data.email, data.password);
+    nevigate('/');
+  };
+
 
   return (
     <div className=" flex justify-center items-center py-28">
@@ -108,9 +112,9 @@ const nevigate = useNavigate();
                 value="Login"
                 className="bg-primary transition duration-150 ease-in-out hover:scale-[0.97] text-white py-3 rounded"
               />
-              <a href="/" className="text-center hover:text-[#3b5998]">
+              <Link to="/forgotPass" className="text-center hover:text-[#3b5998]">
                 Forgot Password?
-              </a>
+              </Link>
             </form>
 
             <p className="text-center py-5 text-slate-700">

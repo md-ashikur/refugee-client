@@ -19,7 +19,7 @@ const Home = () => {
         accomodation={accomodation}>
 
         </Accomodation>
-        )
+        ).reverse()
       }
     
     </div>

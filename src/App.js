@@ -6,6 +6,7 @@ import Login from './Pages/Login/Login';
 import Register from './Pages/SignUp/Register';
 import NotFound from './NotFound/NotFound';
 import EditListings from './Pages/Edit/EditListings';
+import ForgotPass from './Pages/Login/ForgotPass';
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route path="/edit" element={<EditListings/>} />
         <Route path="/login" element={<Login/>} />
         <Route path="/register" element={<Register/>} />
+        <Route path="/forgotPass" element={<ForgotPass/>} />
         
         <Route path="*" element={<NotFound/>} />
         

@@ -7,7 +7,7 @@ const Accomodation = ({accomodation}) => {
 
     return (
        
-            <div className="lg:p-8 p-5 rounded-lg my-10 mx-5 h-auto lg:w-3/4 shadow-lg ">
+            <div className="lg:p-8 p-5 rounded-lg my-10 mx-5 h-auto lg:w-4/5 shadow-lg ">
         <div className="grid lg:grid-cols-2 gap-3">
           <div>
             {/* ------------picture input----------- */}

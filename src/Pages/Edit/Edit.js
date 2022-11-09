@@ -29,7 +29,8 @@ const Edit = ({ accomodation }) => {
       .then((res) => res.json())
       .then((data) => setAccomodations(data));
   }, []);
-
+ 
+  const onSubmit = (data) => console.log(data);
   // delete===========================
   const handleDelete = (id) => {
     const proceed = window.confirm("Are you sure you want to delete this?");
@@ -51,7 +52,8 @@ const Edit = ({ accomodation }) => {
         });
     }
   };
-  const onSubmit = (data) => console.log(data);
+
+ 
   return (
     <div className="lg:p-8 p-5 rounded-lg my-10 mx-5 h-auto lg:w-3/4 shadow-lg ">
       <form onSubmit={handleSubmit(onSubmit)}>

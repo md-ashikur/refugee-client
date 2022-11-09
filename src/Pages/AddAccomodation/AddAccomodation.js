@@ -241,7 +241,7 @@ const imgStrogeKey = 'baaf690471e7b0f1c00bcea99f84d257';
                   className="btn bg-primary border-0 text-white"
                 />
                 <Link to="" className="lg:order-first">
-                  <input onClick={handleClick} value="Cancle" className="btn text-white w-full" />
+                  <button onClick={handleClick} className="btn text-white w-full" >Cancle</button>
                 </Link>
               </div>
             </div>
