@@ -1,23 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { useForm } from "react-hook-form";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AiFillEye } from "react-icons/ai";
 import auth from "../../firebase.init";
 import Loading from "../../Components/Loading/Loading";
+import { useTranslation } from "react-i18next";
 
 const Login = () => {
-  const [signInWithEmailAndPassword, user, loading, error] =
+  const { t } = useTranslation();
+  const [signInWithEmailAndPassword, user, loading, LoginError] =
     useSignInWithEmailAndPassword(auth);
-// Navigate=====================
-const nevigate = useNavigate();
   const {
     register,
     formState: { errors },
     handleSubmit,
   } = useForm();
 
-  
+  // Navigate=====================
+  const nevigate = useNavigate();
 
   //passwordShown==========================
   const [passwordShown, setPasswordShown] = useState(false);
@@ -28,34 +29,28 @@ const nevigate = useNavigate();
   };
 
   let signInError;
-  const location = useLocation();
-  let from = location.state?.from?.pathname || "/";
 
-
-  if (error) {
-    return (signInError = (
-      <p className="text-red-500 text-xs">{error?.message}</p>
-    ));
+  if (user) {
+    nevigate("/home");
+  }
+  if (LoginError) {
+    signInError = <p className="text-red-500 text-xs">User not found</p>;
   }
   if (loading) {
-    return <Loading></Loading>
+    return <Loading></Loading>;
   }
-  if (user) {
-    console.log(user);
-  }
-  const onSubmit = async(data) => {
-    console.log(data);
-    await signInWithEmailAndPassword(data.email, data.password);
-    nevigate('/');
-  };
 
+  const onSubmit = async (data) => {
+   
+    await signInWithEmailAndPassword(data.email, data.password);
+  };
 
   return (
     <div className=" flex justify-center items-center py-28">
       <div className="lg:w-5/4 my-10">
         <div className="min-h-fit lg:px-5 rounded-lg shadow-2xl ">
           <div className="card-body">
-            <h2 className="text-2xl font-bold py-3">Login</h2>
+            <h2 className="text-2xl font-bold py-3">{t("login")}</h2>
             <form
               onSubmit={handleSubmit(onSubmit)}
               className="grid grid-cols-1 gap-2"
@@ -109,18 +104,21 @@ const nevigate = useNavigate();
               {signInError}
               <input
                 type="submit"
-                value="Login"
+                value={t("login")}
                 className="bg-primary transition duration-150 ease-in-out hover:scale-[0.97] text-white py-3 rounded"
               />
-              <Link to="/forgotPass" className="text-center hover:text-[#3b5998]">
-                Forgot Password?
+              <Link
+                to="/forgotPass"
+                className="text-center hover:text-[#3b5998]"
+              >
+                {t("forgotPass")}
               </Link>
             </form>
 
             <p className="text-center py-5 text-slate-700">
-              Don't have an account yet?
+              {t("dontHaveAccount")}
               <Link to="/register">
-                <span className="text-primary"> Register</span>
+                <span className="text-primary"> {t("register")}</span>
               </Link>
             </p>
           </div>

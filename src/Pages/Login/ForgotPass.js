@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useSendPasswordResetEmail } from "react-firebase-hooks/auth";
 import { toast, ToastContainer } from "react-toastify";
 import auth from "../../firebase.init";
-
+import 'react-toastify/dist/ReactToastify.css';
 
 const ForgotPass = () => {
   const [email, setEmail] = useState("");
@@ -44,7 +44,15 @@ const ForgotPass = () => {
               onClick={async () => {
                 await sendPasswordResetEmail(email);
                 
-                alert('Successfully email send')
+                toast('Successfully email send', {
+                  position: "top-center",
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  })
                
               }}
             >
@@ -76,7 +84,7 @@ const ForgotPass = () => {
           </label>
         </form>
       </div>
-    
+      <ToastContainer />
     </div>
   );
 };

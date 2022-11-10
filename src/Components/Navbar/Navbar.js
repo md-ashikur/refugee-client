@@ -6,6 +6,7 @@ import auth from "../../firebase.init";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { signOut } from "firebase/auth";
 import { IoMdLogIn } from "react-icons/io";
+import { useTranslation } from "react-i18next";
 
 const Navbar = () => {
   const [user] = useAuthState(auth);
@@ -14,13 +15,18 @@ const Navbar = () => {
   };
 
   // language====================
+const { t, i18n} = useTranslation();
 
+const handleChangeLng = (lng) => {
+  i18n.changeLanguage(lng);
+  localStorage.setItem("lng", lng);
+}
   return (
     <div>
       <div className="navbar lg:px-10 px-5 fixed  bg-primary py-5 z-50">
         <div className="flex-1">
           <Link to="/home" className=" text-white font-bold lg:text-xl">
-            Refugee Accomodation
+            {t("refugee")}
           </Link>
         </div>
 
@@ -31,7 +37,7 @@ const Navbar = () => {
             className="flex flex-col items-center text-white"
           >
             <IoAddCircleOutline className="text-3xl " />
-            <p className="hidden lg:block text-xs pt-1">Add Accomodation</p>
+            <p className="hidden lg:block text-xs pt-1">{t("addAccomodation")}</p>
           </NavLink>): (<></>)
 
          }
@@ -45,19 +51,19 @@ const Navbar = () => {
               <div className="">
                 <IoLanguage className="text-3xl" />
               </div>
-              <p className="pt-1 text-xs  hidden lg:block">Language</p>
+              <p className="pt-1 text-xs  hidden lg:block">{t("language")}</p>
             </label>
             <ul
               tabIndex={0}
               className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
             >
-              <li>
+              <li onClick={() => handleChangeLng("uk")} >
                 <Link>український</Link>
               </li>
-              <li>
+              <li  onClick={() => handleChangeLng("en")}>
                 <Link>English</Link>
               </li>
-              <li>
+              <li  onClick={() => handleChangeLng("de")}>
                 <Link>Deutsch</Link>
               </li>
             </ul>
@@ -67,7 +73,7 @@ const Navbar = () => {
             <div className="dropdown dropdown-end">
               <label tabIndex={0} className="text-white">
                 <CgProfile className="text-3xl " />
-                <p className="pt-1 text-xs  hidden lg:block">Profile</p>
+                <p className="pt-1 text-xs  hidden lg:block">{t("profile")}</p>
               </label>
               <ul
                 tabIndex={0}
@@ -75,11 +81,11 @@ const Navbar = () => {
               >
                
                 <li>
-                  <Link to="edit">Edit Listings</Link>
+                  <Link to="edit">{t("editListings")}</Link>
                 </li>
                 <li>
                   <Link to="login" onClick={handleSignOut}>
-                    Logout
+                    {t("logout")}
                   </Link>
                 </li>
               </ul>
@@ -87,7 +93,7 @@ const Navbar = () => {
           ) : (
             <Link to="login" className="flex flex-col items-center text-white">
               <IoMdLogIn className="text-3xl" />
-              <p className="pt-1 text-xs  hidden lg:block">Login</p>
+              <p className="pt-1 text-xs  hidden lg:block">{t("login")}</p>
             </Link>
           )}
         </div>

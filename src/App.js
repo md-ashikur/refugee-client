@@ -9,12 +9,17 @@ import EditListings from './Pages/Edit/EditListings';
 import ForgotPass from './Pages/Login/ForgotPass';
 
 
+
 function App() {
  
 
+
   return (
     <div className="">
+ 
+
       <Navbar/>
+     
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />

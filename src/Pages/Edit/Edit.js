@@ -1,8 +1,14 @@
-import React, { useEffect, useState } from "react";
+
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const Edit = ({ accomodation }) => {
+  const { t } = useTranslation();
+  const [accomodations, setAccomodations] = useState([]);
   const {
     image,
     people,
@@ -20,18 +26,60 @@ const Edit = ({ accomodation }) => {
     register,
     formState: { errors },
     handleSubmit,
+    
   } = useForm();
 
-  const [accomodations, setAccomodations] = useState([]);
+  // Edit accomodation===============================
+  const imgStrogeKey = "baaf690471e7b0f1c00bcea99f84d257";
+  const onSubmit = async (data, id) => {
+    console.log(data);
 
-  useEffect(() => {
-    fetch(`http://localhost:5000/accomodations`)
+    const image = data.image[0];
+    const formData = new FormData();
+    formData.append("image", image);
+    const url = `https://api.imgbb.com/1/upload?expiration=600&key=${imgStrogeKey}`;
+    fetch(url, {
+      method: "POST",
+      body: formData,
+    })
       .then((res) => res.json())
-      .then((data) => setAccomodations(data));
-  }, []);
- 
-  const onSubmit = (data) => console.log(data);
-  // delete===========================
+      .then((result) => {
+        if (result.success) {
+          const img = result.data.url;
+          const accomodation = {
+            image: img,
+            people: data.people,
+            rooms: data.rooms,
+            city: data.city,
+            from: data.from,
+            to: data.to,
+            email: data.email,
+            phone: data.phone,
+            title: data.title,
+            description: data.description,
+          };
+          // send to database
+          fetch(`http://localhost:5000/accomodations/${id}`, {
+            method: "PUT",
+            headers: {
+              "content-type": "application/json",
+            },
+            body: JSON.stringify(accomodation),
+          })
+            .then((res) => res.json())
+            .then((updated) => {
+              if (updated.insertedId) {
+                toast.success("Accomodation Updated successfully");
+              } else {
+                toast.error("Error adding accomodation");
+              }
+            });
+        }
+        console.log(result);
+      });
+  };
+
+  // delete accomoation===========================
   const handleDelete = (id) => {
     const proceed = window.confirm("Are you sure you want to delete this?");
     if (proceed) {
@@ -43,7 +91,15 @@ const Edit = ({ accomodation }) => {
         .then((data) => {
           if (data.deleteCount > 0) {
             console.log(data);
-            alert("Successfully deleted");
+            toast.warning("Successfully deleted", {
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              });
             const remaining = accomodations.filter(
               (accomodation) => accomodation._id !== id
             );
@@ -53,7 +109,6 @@ const Edit = ({ accomodation }) => {
     }
   };
 
- 
   return (
     <div className="lg:p-8 p-5 rounded-lg my-10 mx-5 h-auto lg:w-3/4 shadow-lg ">
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -66,10 +121,10 @@ const Edit = ({ accomodation }) => {
                 className="input w-full h-36 pt-16 lg:pl-32 pl-12"
                 type="file"
                 accept="image/*"
-                {...register("picture", { required: true })}
+                {...register("image")}
                 aria-invalid={errors.picture ? "true" : "false"}
               />
-              {errors.picture?.type === "required" && (
+              {errors.image?.type === "required" && (
                 <p role="alert" className="text-xs text-red-500">
                   Image is required
                 </p>
@@ -81,7 +136,7 @@ const Edit = ({ accomodation }) => {
                 <input
                   className="input w-full"
                   type="number"
-                  value={people}
+                  defaultValue={people}
                   {...register("people", { required: true })}
                   aria-invalid={errors.people ? "true" : "false"}
                   placeholder="Number of People"
@@ -98,7 +153,7 @@ const Edit = ({ accomodation }) => {
                 <input
                   className="input w-full"
                   type="number"
-                  value={rooms}
+                  defaultValue={rooms}
                   {...register("rooms", { required: true })}
                   aria-invalid={errors.rooms ? "true" : "false"}
                   placeholder="Available Rooms"
@@ -115,7 +170,7 @@ const Edit = ({ accomodation }) => {
             <div className="flex-col">
               <input
                 className="input w-full"
-                value={city}
+                defaultValue={city}
                 {...register("city", { required: true })}
                 aria-invalid={errors.city ? "true" : "false"}
                 placeholder="City"
@@ -134,6 +189,7 @@ const Edit = ({ accomodation }) => {
                 <input
                   className="input w-full"
                   type="date"
+                  defaultValue={from}
                   {...register("from", { required: true })}
                   aria-invalid={errors.from ? "true" : "false"}
                 />
@@ -149,6 +205,7 @@ const Edit = ({ accomodation }) => {
                 <input
                   className="input w-full"
                   type="date"
+                  defaultValue={to}
                   {...register("to", { required: true })}
                   aria-invalid={errors.to ? "true" : "false"}
                 />
@@ -167,7 +224,7 @@ const Edit = ({ accomodation }) => {
                 <input
                   className="input w-full"
                   type="email"
-                  value={email}
+                  defaultValue={email}
                   {...register("Email")}
                   placeholder="Email"
                 />
@@ -178,7 +235,7 @@ const Edit = ({ accomodation }) => {
                 <input
                   className="input w-full"
                   type="tel"
-                  value={phone}
+                  defaultValue={phone}
                   {...register("phone")}
                   placeholder="Phone Number"
                 />
@@ -193,7 +250,7 @@ const Edit = ({ accomodation }) => {
             <div className="flex-col">
               <input
                 className="input w-full"
-                value={title}
+                defaultValue={title}
                 {...register("title", { required: true })}
                 aria-invalid={errors.title ? "true" : "false"}
                 placeholder="Title"
@@ -209,7 +266,7 @@ const Edit = ({ accomodation }) => {
             <div className="flex-col">
               <textarea
                 className="input py-2 w-full h-64"
-                value={description}
+                defaultValue={description}
                 {...register("description", { required: true })}
                 aria-invalid={errors.description ? "true" : "false"}
                 placeholder="Property Description..."
@@ -225,20 +282,21 @@ const Edit = ({ accomodation }) => {
             <div className="grid lg:grid-cols-2 gap-3 my-3">
               <input
                 type="submit"
-                value="Edit"
+                value={t("edit")}
                 className="btn bg-primary hover: border-0 text-white"
               />
               <Link to="" className="lg:order-first">
-                <input
+                <button
                   onClick={() => handleDelete(accomodation._id)}
-                  value="Delete"
+                  
                   className="btn bg-red-500 border-0 hover:bg-red-600 text-white w-full"
-                />
+                >{t("delete")}</button>
               </Link>
             </div>
           </div>
         </div>
       </form>
+      <ToastContainer />
     </div>
   );
 };

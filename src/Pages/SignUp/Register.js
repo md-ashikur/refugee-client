@@ -8,8 +8,10 @@ import {
 } from "react-firebase-hooks/auth";
 import auth from "../../firebase.init";
 import Loading from "../../Components/Loading/Loading";
+import { useTranslation } from "react-i18next";
 
 const Register = () => {
+  const { t } = useTranslation();
   const [createUserWithEmailAndPassword, user, loading, error] =
     useCreateUserWithEmailAndPassword(auth);
   const [updateProfile, updating, updateError] = useUpdateProfile(auth);
@@ -19,16 +21,19 @@ const Register = () => {
     handleSubmit,
   } = useForm();
 
-
   // Navigate=====================
   const nevigate = useNavigate();
 
   const onSubmit = async (data) => {
     console.log(data);
-    await createUserWithEmailAndPassword(data.email, data.password, data.firstName, data.lastName);
-    await updateProfile({ displayName:data.username });
-    nevigate('/login');
-    
+    await createUserWithEmailAndPassword(
+      data.email,
+      data.password,
+      data.firstName,
+      data.lastName
+    );
+    await updateProfile({ displayName: data.username });
+   
   };
 
   const [passwordShown, setPasswordShown] = useState(false);
@@ -39,15 +44,14 @@ const Register = () => {
 
   let signInError;
   if (error || updateError) {
-    return (signInError = (
-      <p className="text-red-500 text-xs">{error?.message}</p>
-    ));
+    signInError = <p className="text-red-500 text-xs">Email already in use</p>;
   }
-  if ( loading || updating) {
-    return <Loading></Loading>
+  if (loading || updating) {
+    return <Loading></Loading>;
   }
   if (user) {
     console.log(user);
+    nevigate("/login");
   }
 
   return (
@@ -55,7 +59,7 @@ const Register = () => {
       <div className="lg:w-1/2  rounded-lg my-10 mx-5">
         <div className="min-h-fit lg:px-16 rounded-lg shadow-2xl">
           <div className="card-body">
-            <h2 className="text-2xl font-bold py-3">Create Account</h2>
+            <h2 className="text-2xl font-bold py-3">{t("createAccount")}</h2>
             <form
               onSubmit={handleSubmit(onSubmit)}
               className="grid lg:grid-cols-1 gap-2"
@@ -161,17 +165,16 @@ const Register = () => {
 
               {signInError}
               <input
-             
                 type="submit"
-                value="Create Account"
+                value={t("createAccount")}
                 className="bg-primary transition duration-150 ease-in-out hover:scale-[0.97] text-white py-3 rounded"
               />
             </form>
 
             <p className="text-center py-5 text-slate-700">
-              Already have an account?
+              {t("alreadyHaveAccount")}
               <Link to="/login">
-                <span className="text-primary"> Log In</span>
+                <span className="text-primary"> {t("login")}</span>
               </Link>
             </p>
           </div>
