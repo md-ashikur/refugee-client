@@ -1,9 +1,11 @@
-import React from "react";
+import axios from "axios";
+import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Context } from "../../Context/Context";
 import "./Accomodation.css";
 
 const AddAccomodation = () => {
@@ -17,18 +19,15 @@ const AddAccomodation = () => {
 
   const handleClick = () => reset();
   // ===========================
-
+  const { user } = useContext(Context);
+  const [file, setFile] = useState(null);
   // ======================================================================
 
-  const onSubmit = async (data) => {
-    const image = data.image[0];
-    const formData = new FormData();
-    formData.append("image", image);
-    console.log(data);
-    const accomodation = {
-      image: image,
-      people: data.people,
-      rooms: data.rooms,
+  const onSubmit = async (data, e) => {
+    const newPost = {
+      username: user.username,
+      numberOfPeople: data.numberOfPeople,
+      numberOfRooms: data.numberOfRooms,
       city: data.city,
       from: data.from,
       to: data.to,
@@ -37,36 +36,27 @@ const AddAccomodation = () => {
       title: data.title,
       description: data.description,
     };
-    // send to database
-    fetch(`http://localhost:5000/accomodations`, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(accomodation),
-    })
-      .then((res) => res.json())
-      .then((inserted) => {
-        console.log(inserted);
-        if (inserted.insertedId) {
-          toast.success("Accomodation added successfully", {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
-          reset();
-        } else {
-          toast.error("Error adding accomodation");
-        }
-      });
+    if (file) {
+      const data = new FormData();
+      const filename = Date.new() + file.name;
+      data.append("name", filename);
+      data.append("file", file);
+      newPost.image = filename;
+      try {
+        await axios.post("/upload", data);
+      } catch (err) {}
+    }
+    try {
+      await axios.post("/posts", newPost);
+    } catch (err) {}
+    window.location.replace("/");
   };
 
   return (
     <div className="flex justify-center py-20">
+      {file && (
+        <img className="writeImg" src={URL.createObjectURL(file)} alt="" />
+      )}
       <div className="lg:p-8 p-5 rounded-lg my-10 mx-5 h-auto lg:w-3/4 shadow-lg ">
         <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
           <div className="grid lg:grid-cols-2 gap-3">
@@ -78,6 +68,7 @@ const AddAccomodation = () => {
                   className="input w-full h-36 pt-16 lg:pl-32 pl-12"
                   type="file"
                   accept="image/*"
+                  onChange={(e) => setFile(e.target.files[0])}
                   {...register("image", { required: true })}
                   aria-invalid={errors.image ? "true" : "false"}
                 />
@@ -93,11 +84,11 @@ const AddAccomodation = () => {
                   <input
                     className="input w-full"
                     type="number"
-                    {...register("people", { required: true })}
+                    {...register("numberOfPeople", { required: true })}
                     aria-invalid={errors.people ? "true" : "false"}
                     placeholder="Number of People"
                   />
-                  {errors.people?.type === "required" && (
+                  {errors.numberOfPeople?.type === "required" && (
                     <p role="alert" className="text-xs text-red-500">
                       Number of People is required
                     </p>
@@ -109,11 +100,11 @@ const AddAccomodation = () => {
                   <input
                     className="input w-full"
                     type="number"
-                    {...register("rooms", { required: true })}
+                    {...register("numberOfRooms", { required: true })}
                     aria-invalid={errors.rooms ? "true" : "false"}
                     placeholder="Available Rooms"
                   />
-                  {errors.rooms?.type === "required" && (
+                  {errors.numberOfRooms?.type === "required" && (
                     <p role="alert" className="text-xs text-red-500">
                       Available Rooms is required
                     </p>
@@ -243,7 +234,7 @@ const AddAccomodation = () => {
                     onClick={handleClick}
                     className="btn text-white w-full"
                   >
-                   {t("cancle")}
+                    {t("cancle")}
                   </button>
                 </Link>
               </div>

@@ -1,17 +1,30 @@
-import React from "react";
-import { Link, NavLink } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { IoAddCircleOutline, IoLanguage } from "react-icons/io5";
 import { CgProfile } from "react-icons/cg";
-import auth from "../../firebase.init";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { signOut } from "firebase/auth";
 import { IoMdLogIn } from "react-icons/io";
 import { useTranslation } from "react-i18next";
+import { Context } from "../../Context/Context";
+import axios from "axios";
 
 const Navbar = () => {
-  const [user] = useAuthState(auth);
-  const handleSignOut = () => {
-    signOut(auth);
+  const { user, dispatch } = useContext(Context);
+  const [post, setPost] = useState({});
+  const { search } = useLocation();
+
+  useEffect(() => {
+    const getPost = async () => {
+      const res = await axios.get("/posts/" + search);
+      setPost(res.data);
+     
+    };
+    getPost();
+  }, [search]);
+ 
+
+  
+  const handlelogout = () => {
+    dispatch({type: "LOGOUT"})
   };
 
   // language====================
@@ -25,7 +38,7 @@ const handleChangeLng = (lng) => {
     <div>
       <div className="navbar lg:px-10 px-5 fixed  bg-primary py-5 z-50">
         <div className="flex-1">
-          <Link to="/home" className=" text-white font-bold lg:text-xl">
+          <Link to="/" className=" text-white font-bold lg:text-xl">
             {t("refugee")}
           </Link>
         </div>
@@ -81,10 +94,11 @@ const handleChangeLng = (lng) => {
               >
                
                 <li>
-                  <Link to="edit">{t("editListings")}</Link>
+                {/* {`edit/?user=${post.username}`} */}
+                  <Link to="edit">{t("editListings")}</Link> 
                 </li>
                 <li>
-                  <Link to="login" onClick={handleSignOut}>
+                  <Link to="login" onClick={handlelogout}>
                     {t("logout")}
                   </Link>
                 </li>

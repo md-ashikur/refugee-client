@@ -2,23 +2,22 @@ import React, { Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter } from "react-router-dom";
 import reportWebVitals from "./reportWebVitals";
 import "./i18n.js";
-
-
+import { ContextProvider } from "./Context/Context";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
- 
-   <React.StrictMode>
+  <React.StrictMode>
     <BrowserRouter>
-    <Suspense fallback="loading">
-      <App />
-      </Suspense>
+   
+        <ContextProvider>
+          <App />
+        </ContextProvider>
+  
     </BrowserRouter>
   </React.StrictMode>
-
 );
 
 // If you want to start measuring performance in your app, pass a function

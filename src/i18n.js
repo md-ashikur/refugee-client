@@ -21,7 +21,7 @@ i18next
           logout: "Logout",
           login: "Login",
           // button===============
-          cancle: "CANCLE",
+          cancle: "CANCEL",
           add: "ADD",
           delete: "DELETE",
           edit: "EDIT",
@@ -38,7 +38,7 @@ i18next
           forgotPass: "Forgot Password?",
           dontHaveAccount: "Don't have an account yet?",
           register: "Register",
-          
+
           //Regidter page============
           createAccount: "Create Account",
           alreadyHaveAccount: "Already have an account?",
@@ -57,7 +57,7 @@ i18next
           logout: "Вийти",
           login: "Логін",
 
-          cancle: "СКАСУВАТИ",
+          cancle: "скасувати",
           add: "ДОДАТИ",
           delete: "ВИДАЛИТИ",
           edit: "РЕДАГУВАТИ",
@@ -91,7 +91,7 @@ i18next
           logout: "Ausloggen",
           login: "Anmeldung",
 
-          cancle: "ABBRECHEN",
+          cancle: "Abbrechen",
           add: "HINZUFÜGEN",
           delete: "LÖSCHEN",
           edit: "BEARBEITEN",

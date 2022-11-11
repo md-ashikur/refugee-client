@@ -1,58 +1,48 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { AiFillEye } from "react-icons/ai";
-import {
-  useCreateUserWithEmailAndPassword,
-  useUpdateProfile,
-} from "react-firebase-hooks/auth";
-import auth from "../../firebase.init";
-import Loading from "../../Components/Loading/Loading";
 import { useTranslation } from "react-i18next";
+import axios from "axios";
 
 const Register = () => {
   const { t } = useTranslation();
-  const [createUserWithEmailAndPassword, user, loading, error] =
-    useCreateUserWithEmailAndPassword(auth);
-  const [updateProfile, updating, updateError] = useUpdateProfile(auth);
+
+  const [error, setError] = useState(false)
   const {
     register,
     formState: { errors },
     handleSubmit,
   } = useForm();
 
-  // Navigate=====================
-  const nevigate = useNavigate();
-
   const onSubmit = async (data) => {
     console.log(data);
-    await createUserWithEmailAndPassword(
-      data.email,
-      data.password,
-      data.firstName,
-      data.lastName
-    );
-    await updateProfile({ displayName: data.username });
+    setError(false);
+  try{
+    const res = await axios.post("/auth/register", {
+      username: data.username,
+      firstname: data.firstname,
+      lastname: data.lastname,
+      email: data.email,
+      password: data.password,
+      
+     });
+     res.data && window.location.replace("/login")
+  }catch(err){
+   setError(true);
+  }
+  
+    
    
   };
-
+ // show Password start===================
   const [passwordShown, setPasswordShown] = useState(false);
-  // Password toggle handler
+ 
   const togglePassword = () => {
     setPasswordShown(!passwordShown);
   };
-
-  let signInError;
-  if (error || updateError) {
-    signInError = <p className="text-red-500 text-xs">Email already in use</p>;
-  }
-  if (loading || updating) {
-    return <Loading></Loading>;
-  }
-  if (user) {
-    console.log(user);
-    nevigate("/login");
-  }
+ // show Password endl===================
+  
 
   return (
     <div className=" flex justify-center items-center py-28">
@@ -83,7 +73,7 @@ const Register = () => {
                   <input
                     placeholder="First Name*"
                     className="border-b-2 slate-700 w-full outline-0 py-2"
-                    {...register("firstName", {
+                    {...register("firstname", {
                       maxLength: 20,
                       required: {
                         value: true,
@@ -92,7 +82,7 @@ const Register = () => {
                     })}
                   />
                   <p className="text-red-500 text-xs">
-                    {errors.firstName?.message}
+                    {errors.firstname?.message}
                   </p>
                 </div>
                 {/* ==========Last Name input=========== */}
@@ -100,7 +90,7 @@ const Register = () => {
                   <input
                     placeholder="Last Name*"
                     className="border-b-2 slate-700 w-full outline-0 py-2"
-                    {...register("lastName", {
+                    {...register("lastname", {
                       maxLength: 20,
                       required: {
                         value: true,
@@ -109,7 +99,7 @@ const Register = () => {
                     })}
                   />
                   <p className="text-red-500 text-xs">
-                    {errors.lastName?.message}
+                    {errors.lastname?.message}
                   </p>
                 </div>
               </div>
@@ -156,20 +146,26 @@ const Register = () => {
                     },
                   })}
                 />
-                <AiFillEye
+                 {passwordShown ? <AiFillEye
                   onClick={togglePassword}
-                  className="absolute right-3 top-4 text-xl hover:text-primary"
-                />
+                  className="absolute right-3 top-4 text-xl text-primary"
+                />: <AiFillEye
+                onClick={togglePassword}
+                className="absolute right-3 top-4 text-xl hover:text-primary"
+              />}
               </div>
               <p className="text-red-500 text-xs">{errors.password?.message}</p>
 
-              {signInError}
+             
               <input
                 type="submit"
                 value={t("createAccount")}
                 className="bg-primary transition duration-150 ease-in-out hover:scale-[0.97] text-white py-3 rounded"
               />
+              
             </form>
+            {error && <p className="text-red-500 text-sm text-center">User already exist</p>}
+
 
             <p className="text-center py-5 text-slate-700">
               {t("alreadyHaveAccount")}

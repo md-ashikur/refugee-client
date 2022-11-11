@@ -1,18 +1,18 @@
-
-import React, { useState } from "react";
+import { async } from "@firebase/util";
+import axios from "axios";
+import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
-
-const Edit = ({ accomodation }) => {
+import "react-toastify/dist/ReactToastify.css";
+import { Context } from "../../Context/Context";
+const Edit = ({ post }) => {
   const { t } = useTranslation();
-  const [accomodations, setAccomodations] = useState([]);
+  const { user } = useContext(Context);
   const {
-    image,
-    people,
-    rooms,
+    numberOfPeople,
+    numberOfRooms,
     city,
     from,
     to,
@@ -20,95 +20,47 @@ const Edit = ({ accomodation }) => {
     phone,
     title,
     description,
-  } = accomodation;
+  } = post;
 
   const {
     register,
     formState: { errors },
     handleSubmit,
-    
   } = useForm();
 
-  // Edit accomodation===============================
-  const imgStrogeKey = "baaf690471e7b0f1c00bcea99f84d257";
-  const onSubmit = async (data, id) => {
+  // Edit accommodation start===============================
+
+  const onSubmit = async (data) => {
     console.log(data);
-
-    const image = data.image[0];
-    const formData = new FormData();
-    formData.append("image", image);
-    const url = `https://api.imgbb.com/1/upload?expiration=600&key=${imgStrogeKey}`;
-    fetch(url, {
-      method: "POST",
-      body: formData,
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        if (result.success) {
-          const img = result.data.url;
-          const accomodation = {
-            image: img,
-            people: data.people,
-            rooms: data.rooms,
-            city: data.city,
-            from: data.from,
-            to: data.to,
-            email: data.email,
-            phone: data.phone,
-            title: data.title,
-            description: data.description,
-          };
-          // send to database
-          fetch(`http://localhost:5000/accomodations/${id}`, {
-            method: "PUT",
-            headers: {
-              "content-type": "application/json",
-            },
-            body: JSON.stringify(accomodation),
-          })
-            .then((res) => res.json())
-            .then((updated) => {
-              if (updated.insertedId) {
-                toast.success("Accomodation Updated successfully");
-              } else {
-                toast.error("Error adding accomodation");
-              }
-            });
-        }
-        console.log(result);
+    try {
+      await axios.put(`/posts/${post._id}`, {
+        username: user.username,
+        numberOfPeople: data.numberOfPeople,
+        numberOfRooms: data.numberOfRooms,
+        city: data.city,
+        from: data.from,
+        to: data.to,
+        email: data.email,
+        phone: data.phone,
+        title: data.title,
+        description: data.description,
       });
+      window.location.reload();
+    } catch (err) {}
   };
+  // Edit accommodation  end-----------------------------
 
-  // delete accomoation===========================
-  const handleDelete = (id) => {
-    const proceed = window.confirm("Are you sure you want to delete this?");
-    if (proceed) {
-      const url = `http://localhost:5000/accomodations/${id}`;
-      fetch(url, {
-        method: "DELETE",
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.deleteCount > 0) {
-            console.log(data);
-            toast.warning("Successfully deleted", {
-              position: "top-center",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              });
-            const remaining = accomodations.filter(
-              (accomodation) => accomodation._id !== id
-            );
-            setAccomodations(remaining);
-          }
-        });
-    }
+  
+  // delete accommoation start===========================
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`/posts/${post._id}`, {
+        data: { username: user.username },
+      });
+      window.location.reload();
+    } catch (err) {}
   };
-
+  // delete accomoation end---------------------------
   return (
     <div className="lg:p-8 p-5 rounded-lg my-10 mx-5 h-auto lg:w-3/4 shadow-lg ">
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -136,7 +88,7 @@ const Edit = ({ accomodation }) => {
                 <input
                   className="input w-full"
                   type="number"
-                  defaultValue={people}
+                  defaultValue={numberOfPeople}
                   {...register("people", { required: true })}
                   aria-invalid={errors.people ? "true" : "false"}
                   placeholder="Number of People"
@@ -153,7 +105,7 @@ const Edit = ({ accomodation }) => {
                 <input
                   className="input w-full"
                   type="number"
-                  defaultValue={rooms}
+                  defaultValue={numberOfRooms}
                   {...register("rooms", { required: true })}
                   aria-invalid={errors.rooms ? "true" : "false"}
                   placeholder="Available Rooms"
@@ -278,21 +230,25 @@ const Edit = ({ accomodation }) => {
               )}
             </div>
 
-            {/* ----------cancle & Add button---------------- */}
-            <div className="grid lg:grid-cols-2 gap-3 my-3">
-              <input
-                type="submit"
-                value={t("edit")}
-                className="btn bg-primary hover: border-0 text-white"
-              />
-              <Link to="" className="lg:order-first">
-                <button
-                  onClick={() => handleDelete(accomodation._id)}
-                  
-                  className="btn bg-red-500 border-0 hover:bg-red-600 text-white w-full"
-                >{t("delete")}</button>
-              </Link>
-            </div>
+            {/* ----------Edit & delete button---------------- */}
+
+            {post.username === user?.username && (
+              <div className="grid lg:grid-cols-2 gap-3 my-3">
+                <input
+                  type="submit"
+                  value={t("edit")}
+                  className="btn bg-primary hover: border-0 text-white"
+                />
+                <Link to="" className="lg:order-first">
+                  <button
+                    onClick={handleDelete}
+                    className="btn bg-red-500 border-0 hover:bg-red-600 text-white w-full"
+                  >
+                    {t("delete")}
+                  </button>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </form>

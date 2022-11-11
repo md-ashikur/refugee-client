@@ -1,49 +1,49 @@
-import React, { useState } from "react";
-import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { AiFillEye } from "react-icons/ai";
-import auth from "../../firebase.init";
-import Loading from "../../Components/Loading/Loading";
 import { useTranslation } from "react-i18next";
+import { Context } from "../../Context/Context";
+import axios from "axios";
+import Loading from "../../Components/Loading/Loading";
 
 const Login = () => {
+  const { dispatch, isFetching } = useContext(Context);
+  const [error, setError] = useState(false)
   const { t } = useTranslation();
-  const [signInWithEmailAndPassword, user, loading, LoginError] =
-    useSignInWithEmailAndPassword(auth);
+  
   const {
     register,
     formState: { errors },
     handleSubmit,
   } = useForm();
 
-  // Navigate=====================
-  const nevigate = useNavigate();
 
-  //passwordShown==========================
+  //passwordShown ==========================
   const [passwordShown, setPasswordShown] = useState(false);
 
-  // Password toggle handler
   const togglePassword = () => {
     setPasswordShown(!passwordShown);
   };
 
-  let signInError;
-
-  if (user) {
-    nevigate("/home");
-  }
-  if (LoginError) {
-    signInError = <p className="text-red-500 text-xs">User not found</p>;
-  }
-  if (loading) {
-    return <Loading></Loading>;
-  }
-
+  // form onSubmit=======================
   const onSubmit = async (data) => {
-   
-    await signInWithEmailAndPassword(data.email, data.password);
+    dispatch({ type: "LOGIN_START" });
+    setError(false);
+    try {
+      const res = await axios.post("/auth/login", {
+        username: data.username,
+        password: data.password,
+      });
+      dispatch({ type: "LOGIN_SUCCESS", payload: res.data });
+    } catch (err) {
+      dispatch({ type: "LOGIN_FAILURE" });
+      setError(true);
+    }
   };
+  if(isFetching){
+    <Loading></Loading>
+  }
 
   return (
     <div className=" flex justify-center items-center py-28">
@@ -56,24 +56,22 @@ const Login = () => {
               className="grid grid-cols-1 gap-2"
             >
               <input
-                type="email"
+                type="text"
+               
                 className="border-b-2 slate-700 outline-0 py-2"
-                placeholder="Email*"
-                {...register("email", {
+                placeholder="Username*"
+                {...register("username", {
                   required: {
                     value: true,
-                    message: "email is required",
-                  },
-                  pattern: {
-                    value: /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/,
-                    message: "Provide valid Email",
+                    message: "username is required",
                   },
                 })}
               />
-              <p className="text-red-500 text-xs">{errors.email?.message}</p>
+              <p className="text-red-500 text-xs">{errors.username?.message}</p>
 
               <div className=" relative">
                 <input
+                
                   type={passwordShown ? "text" : "password"}
                   className="border-b-2 w-full slate-700 outline-0 py-2"
                   placeholder="Password*"
@@ -94,19 +92,26 @@ const Login = () => {
                     },
                   })}
                 />
-                <AiFillEye
-                  onClick={togglePassword}
-                  className="absolute right-3 top-4 text-xl hover:text-primary"
-                />
+                {passwordShown ? (
+                  <AiFillEye
+                    onClick={togglePassword}
+                    className="absolute right-3 top-4 text-xl text-primary"
+                  />
+                ) : (
+                  <AiFillEye
+                    onClick={togglePassword}
+                    className="absolute right-3 top-4 text-xl hover:text-primary"
+                  />
+                )}
               </div>
               <p className="text-red-500 text-xs">{errors.password?.message}</p>
 
-              {signInError}
               <input
                 type="submit"
                 value={t("login")}
                 className="bg-primary transition duration-150 ease-in-out hover:scale-[0.97] text-white py-3 rounded"
               />
+                          {error && <p className="text-red-500 text-sm text-center">No user found</p>}
               <Link
                 to="/forgotPass"
                 className="text-center hover:text-[#3b5998]"

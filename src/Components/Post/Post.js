@@ -1,14 +1,11 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-
-const Accomodation = ({accomodation}) => {
-
-    const {image, people, rooms, city, from, to, email, phone, title, description} = accomodation;
+const Post = ({post}) => {
+    const {image, numberOfPeople, numberOfRooms, city, from, to, email, phone, title, description} = post;
     const { t } = useTranslation();
-
+    const PF = "localhost:5000/Images/";
     return (
-       
         <div className="lg:p-8 p-5 rounded-lg my-10 mx-5 h-auto lg:w-4/5 shadow-lg ">
         <div className="grid lg:grid-cols-2 gap-3">
           <div>
@@ -16,16 +13,16 @@ const Accomodation = ({accomodation}) => {
             
             <b className="text-4xl break-words">{title}</b>
             <div className="w-full my-3">
-              <img src={image} alt="" />
+            <img src={image} alt="" />
             </div>
 
             <div className="grid lg:grid-cols-2 gap-3 ">
               {/* ------------Number of People----------- */}
-              <p><b> {t("numberOfPeople")} :</b> {people}</p>
+              <p><b> {t("numberOfPeople")} :</b> {numberOfPeople}</p>
 
               {/* ------------available rooms---------- */}
 
-              <p> <b>{t("availableRooms")} :</b> {rooms}</p>
+              <p> <b>{t("availableRooms")} :</b> {numberOfRooms}</p>
             </div>
 
             {/* ------------------city------------- */}
@@ -62,8 +59,7 @@ const Accomodation = ({accomodation}) => {
         </div>
      
       </div>
-        
     );
 };
 
-export default Accomodation;
+export default Post;
