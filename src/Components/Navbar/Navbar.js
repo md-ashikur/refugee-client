@@ -12,28 +12,19 @@ const Navbar = () => {
   const [post, setPost] = useState({});
   const { search } = useLocation();
 
-  useEffect(() => {
-    const getPost = async () => {
-      const res = await axios.get("/posts/" + search);
-      setPost(res.data);
-     
-    };
-    getPost();
-  }, [search]);
- 
 
-  
+
   const handlelogout = () => {
-    dispatch({type: "LOGOUT"})
+    dispatch({ type: "LOGOUT" });
   };
 
   // language====================
-const { t, i18n} = useTranslation();
+  const { t, i18n } = useTranslation();
 
-const handleChangeLng = (lng) => {
-  i18n.changeLanguage(lng);
-  localStorage.setItem("lng", lng);
-}
+  const handleChangeLng = (lng) => {
+    i18n.changeLanguage(lng);
+    localStorage.setItem("lng", lng);
+  };
   return (
     <div>
       <div className="navbar lg:px-10 px-5 fixed  bg-primary py-5 z-50">
@@ -45,15 +36,19 @@ const handleChangeLng = (lng) => {
 
         <div className="flex gap-4">
           {/* ===================== Add Accomodation ================ */}
-         { user ? ( <NavLink
-            to="addAccomodation"
-            className="flex flex-col items-center text-white"
-          >
-            <IoAddCircleOutline className="text-3xl " />
-            <p className="hidden lg:block text-xs pt-1">{t("addAccomodation")}</p>
-          </NavLink>): (<></>)
-
-         }
+          {user ? (
+            <NavLink
+              to="addAccomodation"
+              className="flex flex-col items-center text-white"
+            >
+              <IoAddCircleOutline className="text-3xl " />
+              <p className="hidden lg:block text-xs pt-1">
+                {t("addAccomodation")}
+              </p>
+            </NavLink>
+          ) : (
+            <></>
+          )}
 
           {/* ==================== Language ===============   */}
           <div className="dropdown dropdown-end">
@@ -70,13 +65,13 @@ const handleChangeLng = (lng) => {
               tabIndex={0}
               className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
             >
-              <li onClick={() => handleChangeLng("uk")} >
+              <li onClick={() => handleChangeLng("uk")}>
                 <Link>український</Link>
               </li>
-              <li  onClick={() => handleChangeLng("en")}>
+              <li onClick={() => handleChangeLng("en")}>
                 <Link>English</Link>
               </li>
-              <li  onClick={() => handleChangeLng("de")}>
+              <li onClick={() => handleChangeLng("de")}>
                 <Link>Deutsch</Link>
               </li>
             </ul>
@@ -92,10 +87,9 @@ const handleChangeLng = (lng) => {
                 tabIndex={0}
                 className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
               >
-               
                 <li>
-                {/* {`edit/?user=${post.username}`} */}
-                  <Link to="edit">{t("editListings")}</Link> 
+                  {/* {`edit/?user=${post.username}`} */}
+                  <Link to="edit">{t("editListings")}</Link>
                 </li>
                 <li>
                   <Link to="login" onClick={handlelogout}>
