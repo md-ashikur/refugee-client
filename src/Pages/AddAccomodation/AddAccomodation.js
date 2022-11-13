@@ -3,96 +3,100 @@ import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Context } from "../../Context/Context";
 import "./Accomodation.css";
 
 const AddAccomodation = () => {
   const { t } = useTranslation();
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-    reset,
-  } = useForm();
 
-  const handleClick = () => reset();
-  // ===========================
-  const { user } = useContext(Context);
+  const [numberOfPeople, setNumberOfPeople] = useState("");
+  const [numberOfRooms, setNumberOfRooms] = useState("");
+  const [city, setCity] = useState("");
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [file, setFile] = useState(null);
+  const { user } = useContext(Context);
+
+  const handleClick = (e) => {
+    // window.location.reset()
+  };
+  // ===========================
+
   // ======================================================================
 
-  const onSubmit = async (data, e) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const newPost = {
       username: user.username,
-      numberOfPeople: data.numberOfPeople,
-      numberOfRooms: data.numberOfRooms,
-      city: data.city,
-      from: data.from,
-      to: data.to,
-      email: data.email,
-      phone: data.phone,
-      title: data.title,
-      description: data.description,
+      numberOfPeople,
+      numberOfRooms,
+      city,
+      from,
+      to,
+      email,
+      phone,
+      title,
+      description,
     };
     if (file) {
       const data = new FormData();
-      const filename = Date.new() + file.name;
+      const filename =   file.name;
       data.append("name", filename);
       data.append("file", file);
-      newPost.image = filename;
+      newPost.photo = filename;
+      console.log(data);
       try {
         await axios.post("/upload", data);
       } catch (err) {}
     }
     try {
-      await axios.post("/posts", newPost);
+       await axios.post("/posts", newPost);
+window.location.replace("/");
     } catch (err) {}
-    window.location.replace("/");
+    // window.location.replace("/");
   };
 
   return (
     <div className="flex justify-center py-20">
-      {file && (
-        <img className="writeImg" src={URL.createObjectURL(file)} alt="" />
-      )}
       <div className="lg:p-8 p-5 rounded-lg my-10 mx-5 h-auto lg:w-3/4 shadow-lg ">
-        <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
+        <form onSubmit={handleSubmit} encType="multipart/form-data">
           <div className="grid lg:grid-cols-2 gap-3">
             <div>
               {/* ------------picture input----------- */}
 
               <div className="flex-col">
+                {file && (
+                  <img
+                    className="w-full max-h-80"
+                    src={URL.createObjectURL(file)}
+                    alt=""
+                    required
+                  />
+                )}
                 <input
-                  className="input w-full h-36 pt-16 lg:pl-32 pl-12"
+                  className="input w-full py-2 lg:pl-32 pl-12"
                   type="file"
                   accept="image/*"
                   onChange={(e) => setFile(e.target.files[0])}
-                  {...register("image", { required: true })}
-                  aria-invalid={errors.image ? "true" : "false"}
+                  required
                 />
-                {errors.image?.type === "required" && (
-                  <p role="alert" className="text-xs text-red-500">
-                    Image is required
-                  </p>
-                )}
               </div>
               <div className="grid lg:grid-cols-2 gap-3 ">
                 {/* ------------Number of People----------- */}
                 <div className="flex-col">
                   <input
+                   required
                     className="input w-full"
                     type="number"
-                    {...register("numberOfPeople", { required: true })}
-                    aria-invalid={errors.people ? "true" : "false"}
+                    onChange={(e) => setNumberOfPeople(e.target.value)}
                     placeholder="Number of People"
                   />
-                  {errors.numberOfPeople?.type === "required" && (
-                    <p role="alert" className="text-xs text-red-500">
-                      Number of People is required
-                    </p>
-                  )}
                 </div>
 
                 {/* ------------available rooms---------- */}
@@ -100,15 +104,9 @@ const AddAccomodation = () => {
                   <input
                     className="input w-full"
                     type="number"
-                    {...register("numberOfRooms", { required: true })}
-                    aria-invalid={errors.rooms ? "true" : "false"}
+                    onChange={(e) => setNumberOfRooms(e.target.value)}
                     placeholder="Available Rooms"
                   />
-                  {errors.numberOfRooms?.type === "required" && (
-                    <p role="alert" className="text-xs text-red-500">
-                      Available Rooms is required
-                    </p>
-                  )}
                 </div>
               </div>
 
@@ -116,15 +114,9 @@ const AddAccomodation = () => {
               <div className="flex-col">
                 <input
                   className="input w-full"
-                  {...register("city", { required: true })}
-                  aria-invalid={errors.city ? "true" : "false"}
+                  onChange={(e) => setCity(e.target.value)}
                   placeholder="City"
                 />
-                {errors.city?.type === "required" && (
-                  <p role="alert" className="text-xs text-red-500">
-                    City is required
-                  </p>
-                )}
               </div>
 
               {/* ------------date---------------- */}
@@ -134,14 +126,8 @@ const AddAccomodation = () => {
                   <input
                     className="input w-full"
                     type="date"
-                    {...register("from", { required: true })}
-                    aria-invalid={errors.from ? "true" : "false"}
+                    onChange={(e) => setFrom(e.target.value)}
                   />
-                  {errors.from?.type === "required" && (
-                    <p role="alert" className="text-xs text-red-500">
-                      Date is required
-                    </p>
-                  )}
                 </div>
 
                 <div className="flex-col">
@@ -149,15 +135,8 @@ const AddAccomodation = () => {
                   <input
                     className="input w-full"
                     type="date"
-                    {...register("to", { required: true })}
-                    aria-invalid={errors.to ? "true" : "false"}
+                    onChange={(e) => setTo(e.target.value)}
                   />
-
-                  {errors.to?.type === "required" && (
-                    <p role="alert" className="text-xs text-red-500">
-                      Date is required
-                    </p>
-                  )}
                 </div>
               </div>
 
@@ -167,14 +146,9 @@ const AddAccomodation = () => {
                   <input
                     className="input w-full"
                     type="email"
-                    {...register("email", { required: true })}
+                    onChange={(e) => setEmail(e.target.value)}
                     placeholder="Email"
                   />
-                  {errors.email?.type === "required" && (
-                    <p role="alert" className="text-xs text-red-500">
-                      Email is required
-                    </p>
-                  )}
                 </div>
 
                 {/* ------------Phone Number---------- */}
@@ -182,7 +156,7 @@ const AddAccomodation = () => {
                   <input
                     className="input w-full"
                     type="tel"
-                    {...register("phone")}
+                    onChange={(e) => setPhone(e.target.value)}
                     placeholder="Phone Number"
                   />
                 </div>
@@ -196,30 +170,18 @@ const AddAccomodation = () => {
               <div className="flex-col">
                 <input
                   className="input w-full"
-                  {...register("title", { required: true })}
-                  aria-invalid={errors.title ? "true" : "false"}
+                  onChange={(e) => setTitle(e.target.value)}
                   placeholder="Title"
                 />
-                {errors.title?.type === "required" && (
-                  <p role="alert" className="text-xs text-red-500">
-                    Title is required
-                  </p>
-                )}
               </div>
 
               {/* -------------------- description ----------------------- */}
               <div className="flex-col">
                 <textarea
                   className="input py-2 w-full h-64"
-                  {...register("description", { required: true })}
-                  aria-invalid={errors.description ? "true" : "false"}
+                  onChange={(e) => setDescription(e.target.value)}
                   placeholder="Property Description..."
                 />
-                {errors.description?.type === "required" && (
-                  <p role="alert" className="text-xs text-red-500">
-                    Property description is required
-                  </p>
-                )}
               </div>
 
               {/* ----------cancle & Add button---------------- */}
@@ -231,6 +193,7 @@ const AddAccomodation = () => {
                 />
                 <Link to="" className="lg:order-first">
                   <button
+                  
                     onClick={handleClick}
                     className="btn text-white w-full"
                   >

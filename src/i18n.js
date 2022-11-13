@@ -12,7 +12,7 @@ i18next
       en: {
         translation: {
           // navbar===========
-          refugee: "Refugee Accomodation",
+          refugee: "Refugee Accommodation",
           addAccomodation: "Add Accomodation",
           language: "Language",
           profile: "Profile",
