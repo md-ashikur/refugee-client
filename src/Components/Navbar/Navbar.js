@@ -12,8 +12,6 @@ const Navbar = () => {
   const [post, setPost] = useState({});
   const { search } = useLocation();
 
-
-
   const handlelogout = () => {
     dispatch({ type: "LOGOUT" });
   };

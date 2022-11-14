@@ -62,6 +62,8 @@ const Edit = ({ post }) => {
   };
   // delete accomoation end---------------------------
   return (
+   <div className="flex justify-center flex-col items-center pt-20">
+     {post.username === user?.username && (
     <div className="lg:p-8 p-5 rounded-lg my-10 mx-5 h-auto lg:w-3/4 shadow-lg ">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid lg:grid-cols-2 gap-3">
@@ -89,11 +91,11 @@ const Edit = ({ post }) => {
                   className="input w-full"
                   type="number"
                   defaultValue={numberOfPeople}
-                  {...register("people", { required: true })}
-                  aria-invalid={errors.people ? "true" : "false"}
+                  {...register("numberOfPeople", { required: true })}
+                  aria-invalid={errors.numberOfPeople ? "true" : "false"}
                   placeholder="Number of People"
                 />
-                {errors.people?.type === "required" && (
+                {errors.numberOfPeople?.type === "required" && (
                   <p role="alert" className="text-xs text-red-500">
                     Number of People is required
                   </p>
@@ -106,11 +108,11 @@ const Edit = ({ post }) => {
                   className="input w-full"
                   type="number"
                   defaultValue={numberOfRooms}
-                  {...register("rooms", { required: true })}
-                  aria-invalid={errors.rooms ? "true" : "false"}
+                  {...register("numberOfRooms", { required: true })}
+                  aria-invalid={errors.numberOfRooms ? "true" : "false"}
                   placeholder="Available Rooms"
                 />
-                {errors.rooms?.type === "required" && (
+                {errors.numberOfRooms?.type === "required" && (
                   <p role="alert" className="text-xs text-red-500">
                     Available Rooms is required
                   </p>
@@ -232,7 +234,7 @@ const Edit = ({ post }) => {
 
             {/* ----------Edit & delete button---------------- */}
 
-            {post.username === user?.username && (
+          
               <div className="grid lg:grid-cols-2 gap-3 my-3">
                 <input
                   type="submit"
@@ -248,12 +250,14 @@ const Edit = ({ post }) => {
                   </button>
                 </Link>
               </div>
-            )}
+        
           </div>
         </div>
       </form>
-      <ToastContainer />
+     
     </div>
+    )}
+   </div>
   );
 };
 

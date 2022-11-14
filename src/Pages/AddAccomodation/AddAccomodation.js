@@ -1,6 +1,5 @@
 import axios from "axios";
 import React, { useContext, useState } from "react";
-import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -23,9 +22,6 @@ const AddAccomodation = () => {
   const [file, setFile] = useState(null);
   const { user } = useContext(Context);
 
-  const handleClick = (e) => {
-    // window.location.reset()
-  };
   // ===========================
 
   // ======================================================================
@@ -46,7 +42,7 @@ const AddAccomodation = () => {
     };
     if (file) {
       const data = new FormData();
-      const filename =   file.name;
+      const filename = Date.now() + file.name;
       data.append("name", filename);
       data.append("file", file);
       newPost.photo = filename;
@@ -56,8 +52,9 @@ const AddAccomodation = () => {
       } catch (err) {}
     }
     try {
-       await axios.post("/posts", newPost);
-window.location.replace("/");
+      await axios.post("/posts", newPost);
+      alert("Accommodation added successfully");
+      window.location.replace("/");
     } catch (err) {}
     // window.location.replace("/");
   };
@@ -80,18 +77,19 @@ window.location.replace("/");
                   />
                 )}
                 <input
+                 required
                   className="input w-full py-2 lg:pl-32 pl-12"
                   type="file"
                   accept="image/*"
                   onChange={(e) => setFile(e.target.files[0])}
-                  required
+                 
                 />
               </div>
               <div className="grid lg:grid-cols-2 gap-3 ">
                 {/* ------------Number of People----------- */}
                 <div className="flex-col">
                   <input
-                   required
+                    required
                     className="input w-full"
                     type="number"
                     onChange={(e) => setNumberOfPeople(e.target.value)}
@@ -102,6 +100,7 @@ window.location.replace("/");
                 {/* ------------available rooms---------- */}
                 <div className="flex-col">
                   <input
+                    required
                     className="input w-full"
                     type="number"
                     onChange={(e) => setNumberOfRooms(e.target.value)}
@@ -113,10 +112,12 @@ window.location.replace("/");
               {/* ------------------city------------- */}
               <div className="flex-col">
                 <input
+                  required
                   className="input w-full"
                   onChange={(e) => setCity(e.target.value)}
                   placeholder="City"
                 />
+               
               </div>
 
               {/* ------------date---------------- */}
@@ -124,6 +125,7 @@ window.location.replace("/");
                 <div className="flex-col">
                   <p>From</p>
                   <input
+                    required
                     className="input w-full"
                     type="date"
                     onChange={(e) => setFrom(e.target.value)}
@@ -133,6 +135,7 @@ window.location.replace("/");
                 <div className="flex-col">
                   <p>To</p>
                   <input
+                   required
                     className="input w-full"
                     type="date"
                     onChange={(e) => setTo(e.target.value)}
@@ -144,6 +147,7 @@ window.location.replace("/");
                 {/* ------------Email----------- */}
                 <div className="flex-col">
                   <input
+                   required
                     className="input w-full"
                     type="email"
                     onChange={(e) => setEmail(e.target.value)}
@@ -154,6 +158,7 @@ window.location.replace("/");
                 {/* ------------Phone Number---------- */}
                 <div className="flex-col">
                   <input
+                   required
                     className="input w-full"
                     type="tel"
                     onChange={(e) => setPhone(e.target.value)}
@@ -169,6 +174,7 @@ window.location.replace("/");
               {/* -----------title------------- */}
               <div className="flex-col">
                 <input
+                 required
                   className="input w-full"
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="Title"
@@ -178,6 +184,7 @@ window.location.replace("/");
               {/* -------------------- description ----------------------- */}
               <div className="flex-col">
                 <textarea
+                 required
                   className="input py-2 w-full h-64"
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Property Description..."
@@ -192,13 +199,11 @@ window.location.replace("/");
                   className="btn bg-primary border-0 text-white"
                 />
                 <Link to="" className="lg:order-first">
-                  <button
-                  
-                    onClick={handleClick}
+                  <input
+                    value={t("cancle")}
+                    type="reset"
                     className="btn text-white w-full"
-                  >
-                    {t("cancle")}
-                  </button>
+                  />
                 </Link>
               </div>
             </div>
