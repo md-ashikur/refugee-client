@@ -112,12 +112,7 @@ const Login = () => {
                 className="bg-primary transition duration-150 ease-in-out hover:scale-[0.97] text-white py-3 rounded"
               />
                           {error && <p className="text-red-500 text-sm text-center">No user found</p>}
-              <Link
-                to="/forgotPass"
-                className="text-center hover:text-[#3b5998]"
-              >
-                {t("forgotPass")}
-              </Link>
+             
             </form>
 
             <p className="text-center py-5 text-slate-700">
